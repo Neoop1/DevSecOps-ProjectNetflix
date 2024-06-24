@@ -56,7 +56,7 @@ pipeline{
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker'){   
-                       sh "docker build --build-arg TMDB_V3_API_KEY={TMDB_V3_API_KEY} -t netflix ."
+                       sh "docker build --build-arg TMDB_V3_API_KEY=${TMDB_V3_API_KEY} -t netflix ."
                        sh "docker tag netflix neoop1/netflix:latest "
                        sh "docker push neoop1/netflix:latest "
                     }
