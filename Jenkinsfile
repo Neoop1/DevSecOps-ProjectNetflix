@@ -55,9 +55,9 @@ pipeline{
             }
             steps{
                 script{
-                    docker {
-                       sh "docker build --build-arg TMDB_V3_API_KEY=${TMDB_V3_API_KEY} -t netflix ."
-                       sh "docker tag netflix neoop1/netflix:latest"
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                       sh "/var/jenkins_home/tools/org.jenkinsci.plugins.docker.commons.tools.DockerTool/docker/bin/docker build --build-arg TMDB_V3_API_KEY=${TMDB_V3_API_KEY} -t netflix ."
+                       sh "/var/jenkins_home/tools/org.jenkinsci.plugins.docker.commons.tools.DockerTool/docker/bin/docker tag netflix neoop1/netflix:latest"
                     }
                 }
             }
@@ -67,7 +67,7 @@ pipeline{
             steps{
                 script{
                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker'){   
-                       sh "docker push neoop1/netflix:latest"
+                       sh "/var/jenkins_home/tools/org.jenkinsci.plugins.docker.commons.tools.DockerTool/docker/bin/docker push neoop1/netflix:latest"
                     }
                 }
             }
@@ -79,7 +79,7 @@ pipeline{
         }
         stage('Deploy to container'){
             steps{
-                sh 'docker run -d -p 8081:80 neoop1/netflix:latest'
+                sh '/var/jenkins_home/tools/org.jenkinsci.plugins.docker.commons.tools.DockerTool/docker/bin/docker run -d -p 8081:80 neoop1/netflix:latest'
             }
         }
         stage('Deploy to kubernets'){

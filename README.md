@@ -756,3 +756,87 @@ To deploy an application with ArgoCD, you can follow these steps, which I'll out
 
 1. **Cleanup AWS EC2 Instances:**
     - Terminate AWS EC2 instances that are no longer needed.
+
+
+kubectl create namespace netflixapp
+
+
+Create Service Account, Role & Assign that role, And create a secret for Service Account and geenrate a Token
+Creating Service Account
+
+
+kubectl 
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins
+  namespace: netflixapp
+
+Create Role
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: app-role
+  namespace: netflixapp
+rules:
+  - apiGroups:
+        - ""
+        - apps
+        - autoscaling
+        - batch
+        - extensions
+        - policy
+        - rbac.authorization.k8s.io
+    resources:
+      - pods
+      - componentstatuses
+      - configmaps
+      - daemonsets
+      - deployments
+      - events
+      - endpoints
+      - horizontalpodautoscalers
+      - ingress
+      - jobs
+      - limitranges
+      - namespaces
+      - nodes
+      - pods
+      - persistentvolumes
+      - persistentvolumeclaims
+      - resourcequotas
+      - replicasets
+      - replicationcontrollers
+      - serviceaccounts
+      - services
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+Bind the role to service account
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: app-rolebinding
+  namespace: netflixapp 
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: app-role 
+subjects:
+- namespace: netflixapp 
+  kind: ServiceAccount
+  name: jenkins 
+
+    
+Create Token
+
+
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: nm_netflix_secret
+  annotations:
+    kubernetes.io/service-account.name: nm_netflix_secret
+
