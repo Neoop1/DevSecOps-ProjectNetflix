@@ -766,7 +766,6 @@ kubectl create namespace netflixapp
 ```
 
 ```
-kubectl 
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -840,7 +839,7 @@ apiVersion: v1
 kind: Secret
 type: kubernetes.io/service-account-token
 metadata:
-  name: nm_netflix_secret
+  name: nm-netflix-secret
   annotations:
-    kubernetes.io/service-account.name: nm_netflix_secret
+    kubernetes.io/service-account.name: nm-netflix-secret
 ```
